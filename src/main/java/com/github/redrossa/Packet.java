@@ -22,11 +22,17 @@ import java.util.Arrays;
  */
 public class Packet implements Serializable
 {
+    /** Maximum byte size of a Packet object */
+    public static final int MAX_SIZE = 256;
+
+    /** Minimum byte size of a Packet object */
+    public static final int MIN_SIZE = 16;
+
     /** Class serial version UID */
     private static final long serialVersionUID = 7474662397063358803L;
 
     /** Mask of the Header enum of this packet */
-    private Header header;
+    private int header;
 
     /** Byte array representation of the the String value of the accepted data type */
     private byte[] body;
@@ -41,7 +47,7 @@ public class Packet implements Serializable
      */
     public Packet(boolean val)
     {
-        this(Header.BOOLEAN, String.valueOf(val), '\0');
+        this(Header.BOOLEAN, String.valueOf(val), 0);
     }
 
     /**
@@ -51,7 +57,7 @@ public class Packet implements Serializable
      */
     public Packet(int val)
     {
-        this(Header.INTEGER, String.valueOf(val), '\0');
+        this(Header.INTEGER, String.valueOf(val), 0);
     }
 
     /**
@@ -61,7 +67,7 @@ public class Packet implements Serializable
      */
     public Packet(double val)
     {
-        this(Header.DOUBLE, String.valueOf(val), '\0');
+        this(Header.DOUBLE, String.valueOf(val), 0);
     }
 
     /**
@@ -71,11 +77,11 @@ public class Packet implements Serializable
      */
     public Packet(@NotNull String val)
     {
-        this(Header.STRING, val, '\0');
+        this(Header.STRING, val, 0);
     }
 
     /**
-     * Creates a new Packet object of type {@code header}, of raw byte array data
+     * Creates a new Packet object of type {@code header}, of String
      * {@code body} and of unsigned 16-bit {@code footer} specified. This
      * constructor guarantees the header mask specified of this packet exists and
      * that the body is universally encoded.
@@ -86,12 +92,24 @@ public class Packet implements Serializable
      * @param   footer  extra minimal information of the packet.
      */
     @Contract(value = "null, _, _ -> fail; !null, null, _ -> fail", pure = true)
-    public Packet(Header header, String body, char footer)
+    public Packet(@NotNull Header header, @NotNull String body, int footer)
     {
-        if (header == null || body == null)
-            throw new NullPointerException();
+        this(header.getMask(), body.getBytes(StandardCharsets.UTF_8), (char) footer);
+    }
+
+    /**
+     * Creates a new Packet object with the raw data specified. This constructor
+     * assumes the caller has already checked that their parameter is appropriate
+     * for a packet.
+     *
+     * @param   header  header mask of this packet.
+     * @param   body    body of this packet.
+     * @param   footer  footer of this packet.
+     */
+    Packet(int header, byte[] body, char footer)
+    {
         this.header = header;
-        this.body = body.getBytes(StandardCharsets.UTF_8);
+        this.body = body;
         this.footer = footer;
     }
 
@@ -101,9 +119,9 @@ public class Packet implements Serializable
      * It is highly advisable to override this method for a subclass of the
      * Packet class and a subclass of the Header enum.
      *
-     * @return  Header enum type associated with {@code mask}.
+     * @return  header mask of this packet.
      */
-    public final Header header()
+    public final int header()
     {
         return header;
     }
@@ -140,7 +158,7 @@ public class Packet implements Serializable
     public int hashCode()
     {
         int result = 17;
-        result = 31 * result + header.hashCode();
+        result = 31 * result + header;
         result = 31 * result + Arrays.hashCode(body);
         result = 31 * result + footer;
         return result;
@@ -178,6 +196,6 @@ public class Packet implements Serializable
     @Override
     public String toString()
     {
-        return header + " / " + new String(body, StandardCharsets.UTF_8) + " / " + (int) footer;
+        return String.format("[%03d / %s / %05d]",  header, new String(body, StandardCharsets.UTF_8), (int) footer);
     }
 }
