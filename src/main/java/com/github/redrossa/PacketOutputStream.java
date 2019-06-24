@@ -65,7 +65,7 @@ public class PacketOutputStream extends OutputStream implements PacketOutput
     @Override
     public void writePacket(@NotNull Packet p) throws IOException
     {
-        out.writeInt(p.header().getMask());
+        out.writeInt(p.header());
         out.writeInt(p.body().length);
         out.write(p.body(), 0, p.body().length);
         out.writeChar(p.footer());

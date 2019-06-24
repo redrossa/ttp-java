@@ -56,13 +56,13 @@ public class PacketInputStream extends InputStream implements PacketInput
     @Override
     public Packet readPacket() throws IOException
     {
-        Header h = Header.valueOf(in.readInt());
-        byte[] body = new byte[in.readInt()];
-        int bytesRead = in.read(body);
-        if (bytesRead < body.length)
+        int h = in.readInt();
+        byte[] b = new byte[in.readInt()];
+        int bytesRead = in.read(b);
+        if (bytesRead < b.length)
             throw new EOFException();
         char c = in.readChar();
-        return new Packet(h, new String(body, StandardCharsets.UTF_8), c);
+        return new Packet(h, b, c);
     }
 
     /**

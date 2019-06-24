@@ -82,6 +82,6 @@ public enum Header
         return Arrays.stream(values())
                      .filter(header -> header.mask == mask)
                      .findFirst()
-                     .orElse(NOP);
+                     .orElse(null);
     }
 }
