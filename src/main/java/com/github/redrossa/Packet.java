@@ -40,6 +40,12 @@ public class Packet implements Serializable
     /** Unsigned 16-bit type to store further customisation of a packet */
     private char footer;
 
+    /** Default constructor creates a no-operation packet. */
+    public Packet()
+    {
+        this(Header.NOP, "", 0);
+    }
+
     /**
      * Creates a new Packet object of type boolean and default {@code 0} footer.
      *
