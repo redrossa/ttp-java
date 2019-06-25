@@ -56,6 +56,7 @@ public class PacketOutputStream extends OutputStream implements PacketOutput
      * <p>
      * Data for this operation are written to the contained input stream.
      *
+     * @param   p   the packet object to be written.
      * @throws  IOException   the stream has been closed and the contained
      *          input stream does not support reading after close, or
      *          another I/O error occurs.

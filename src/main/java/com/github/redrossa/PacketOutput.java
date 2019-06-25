@@ -18,6 +18,7 @@ public interface PacketOutput
      * Using underlying DataOutputStream, it writes those instances to
      * the binary stream according to its primitive types.
      *
+     * @param   p   the packet object to be written.
      * @throws  IOException the stream has been closed and the contained
      *          input stream does not support reading after close, or
      *          another I/O error occurs.
