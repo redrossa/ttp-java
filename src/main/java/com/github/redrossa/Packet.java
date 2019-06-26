@@ -32,13 +32,13 @@ public class Packet implements Serializable
     private static final long serialVersionUID = 7474662397063358803L;
 
     /** Mask of the Header enum of this packet */
-    private int header;
+    public final int header;
 
     /** Byte array representation of the the String value of the accepted data type */
-    private byte[] body;
+    public final byte[] body;
 
     /** Unsigned 16-bit type to store further customisation of a packet */
-    private char footer;
+    public final char footer;
 
     /** Default constructor creates a no-operation packet. */
     public Packet()
@@ -117,39 +117,6 @@ public class Packet implements Serializable
         this.header = header;
         this.body = body;
         this.footer = footer;
-    }
-
-    /**
-     * Returns the header of this packet.
-     * <p>
-     * It is highly advisable to override this method for a subclass of the
-     * Packet class and a subclass of the Header enum.
-     *
-     * @return  header mask of this packet.
-     */
-    public final int header()
-    {
-        return header;
-    }
-
-    /**
-     * Returns the body of this packet.
-     *
-     * @return  byte array of this packet body.
-     */
-    public final byte[] body()
-    {
-        return body;
-    }
-
-    /**
-     * Returns the footer of this packet.
-     *
-     * @return unsigned 16-bit data of this packet footer.
-     */
-    public final char footer()
-    {
-        return footer;
     }
 
     /**
