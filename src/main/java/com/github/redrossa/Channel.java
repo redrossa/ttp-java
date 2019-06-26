@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * TTP's unique feature of allowing applications to send commands to a server
  * while simultaneously receiving data from it. Data packets for writing to
  * and reading from an I/O stream are buffered in a channel, which allows a
- * selector in a {@code TtpSession} object to pick and ultimately control
+ * selector in a {@code Session} object to pick and ultimately control
  * incoming and outgoing traffic.
  *
  * @author  Adriano Raksi
@@ -19,11 +19,24 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Channel
 {
+    /** Channel ID */
+    public final int id;
+
     /** Packets to be sent to output stream are first buffered in this queue */
     private Queue<Packet> outBuffer = new ConcurrentLinkedQueue<>();
 
     /** Packets to be read from input stream are first buffered in this queue */
     private Queue<Packet> inBuffer = new ConcurrentLinkedQueue<>();
+
+    /**
+     * Creates a new channel with the specified ID.
+     *
+     * @param id the channel id.
+     */
+    public Channel(int id)
+    {
+        this.id = id;
+    }
 
     /**
      * Inserts packet to out buffer for writing to output stream.
