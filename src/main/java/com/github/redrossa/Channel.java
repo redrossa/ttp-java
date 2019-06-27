@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * TTP's unique feature of allowing applications to send commands to a server
  * while simultaneously receiving data from it. Data packets for writing to
  * and reading from an I/O stream are buffered in a channel, which allows a
- * selector in a {@code Session} object to pick and ultimately control
+ * selector in a {@code Portal} object to pick and ultimately control
  * incoming and outgoing traffic.
  *
  * @author  Adriano Raksi
@@ -23,10 +23,10 @@ public class Channel
     public final int id;
 
     /** Packets to be sent to output stream are first buffered in this queue */
-    private Queue<Packet> outBuffer = new ConcurrentLinkedQueue<>();
+    private Queue<Packet> output = new ConcurrentLinkedQueue<>();
 
     /** Packets to be read from input stream are first buffered in this queue */
-    private Queue<Packet> inBuffer = new ConcurrentLinkedQueue<>();
+    private Queue<Packet> input = new ConcurrentLinkedQueue<>();
 
     /**
      * Creates a new channel with the specified ID.
@@ -39,82 +39,82 @@ public class Channel
     }
 
     /**
-     * Inserts packet to out buffer for writing to output stream.
+     * Inserts packet to output buffer for writing to output stream.
      *
-     * @param   p   the packet to insert to out buffer.
+     * @param   p   the packet to insert in output buffer.
      */
     public void send(@NotNull Packet p)
     {
-        outBuffer.offer(p);
+        output.offer(p);
     }
 
     /**
-     * Retrieves packet and remove from in buffer for application use.
+     * Retrieves packet and remove from input buffer for application use.
      *
-     * @return  the packet stored in in buffer.
+     * @return  the packet stored in input buffer.
      */
     public Packet receive()
     {
-        return inBuffer.poll();
+        return input.poll();
     }
 
     /**
-     * Retrieves packet without removing from in buffer for application use.
+     * Retrieves packet without removing from input buffer for application use.
      *
-     * @return  the packet stored in in buffer.
+     * @return  the packet stored in input buffer.
      */
     public Packet peek()
     {
-        return inBuffer.peek();
+        return input.peek();
     }
 
     /**
-     * Inserts packet to in buffer by selector for application use.
+     * Inserts packet to input buffer by selector for application use.
      *
-     * @param   p   the packet to insert to in buffer.
+     * @param   p   the packet to insert in input buffer.
      */
     protected void put(Packet p)
     {
-        inBuffer.offer(p);
+        input.offer(p);
     }
 
     /**
-     * Retrieves packet and remove from out buffer by selector for writing to output stream.
+     * Retrieves packet and remove from output buffer by selector for writing to output stream.
      *
-     * @return  the packet stored in out buffer.
+     * @return  the packet stored in output buffer.
      */
     protected Packet get()
     {
-        return outBuffer.poll();
+        return output.poll();
     }
 
     /**
-     * Retrieves packet without removing from out buffer by selector.
+     * Retrieves packet without removing from output buffer by selector.
      *
-     * @return  the packet stored in out buffer.
+     * @return  the packet stored in output buffer.
      */
     protected Packet look()
     {
-        return outBuffer.peek();
+        return output.peek();
     }
 
     /**
-     * Returns the size of the out buffer.
+     * Returns the size of the output buffer.
      *
-     * @return  the size of the out buffer.
+     * @return  the size of the output buffer.
      */
-    public int outBufferSize()
+    public int outputSize()
     {
-        return outBuffer.size();
+        return output.size();
     }
 
     /**
-     * Returns the size of the in buffer.
+     * Returns the size of the input buffer.
      *
-     * @return  the size of the in buffer.
+     * @return  the size of the input buffer.
      */
-    public int inBufferSize()
+    public int inputSize()
     {
-        return inBuffer.size();
+        return input.size();
     }
 }
