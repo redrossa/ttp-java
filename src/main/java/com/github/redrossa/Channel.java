@@ -38,6 +38,20 @@ public class Channel
         this.id = id;
     }
 
+    /** Blocks until all packets in output buffer are sent */
+    @SuppressWarnings("StatementWithEmptyBody")
+    public void awaitOutput()
+    {
+        while (output.size() > 0);
+    }
+
+    /** Blocks until at least {@code 1} packet in input buffer is available. */
+    @SuppressWarnings("StatementWithEmptyBody")
+    public void awaitInput()
+    {
+        while (input.size() == 0);
+    }
+
     /**
      * Inserts packet to output buffer for writing to output stream.
      *
