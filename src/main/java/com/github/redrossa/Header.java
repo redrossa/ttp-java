@@ -1,7 +1,5 @@
 package com.github.redrossa;
 
-import java.util.Arrays;
-
 /**
  * The header indicates the standardised type of the data body of
  * a TTP packet. A mask is a three-digit integer value of a header.
