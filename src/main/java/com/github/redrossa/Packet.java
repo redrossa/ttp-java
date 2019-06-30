@@ -98,7 +98,7 @@ public class Packet implements Serializable
      * @param   footer  extra minimal information of the packet.
      */
     @Contract(value = "null, _, _ -> fail; !null, null, _ -> fail", pure = true)
-    public Packet(@NotNull Header header, @NotNull String body, int footer)
+    public Packet(@NotNull Headerable header, @NotNull String body, int footer)
     {
         this(header.getMask(), body.getBytes(StandardCharsets.UTF_8), (char) footer);
     }
