@@ -16,7 +16,7 @@ import java.util.Arrays;
  * @version 1.0-SNAPSHOT
  * @since   2019-06-19
  */
-public enum Header
+public enum Header implements Headerable
 {
     /** No operation or placeholder */
     NOP(0),
@@ -46,7 +46,7 @@ public enum Header
     OK(201);
 
     /** The underlying mask of the Header enum. */
-    private int mask;
+    private final int mask;
 
     /**
      * The sole constructor of the Header enum.
@@ -59,29 +59,15 @@ public enum Header
     }
 
     /**
+     * See the general contract of the {@code getMask}
+     * method of {@code Headerable}.
+     * <p>
      * Returns this Header enum's mask.
      *
      * @return  this header's mask.
      */
-    public int getMask()
+    public final int getMask()
     {
         return mask;
-    }
-
-    /**
-     * Returns the Header enum associated with {@code mask}.
-     * If no enum is associated with it, {@code NOP} is returned
-     * instead.
-     *
-     * @param   mask    an {@code int} value whose associated enum is
-     *                  to be returned.
-     * @return  the Header enum associated with {@code mask}.
-     */
-    public static Header valueOf(int mask)
-    {
-        return Arrays.stream(values())
-                     .filter(header -> header.mask == mask)
-                     .findFirst()
-                     .orElse(null);
     }
 }
