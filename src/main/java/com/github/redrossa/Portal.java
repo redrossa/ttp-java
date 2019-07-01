@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -268,6 +267,8 @@ public class Portal implements AutoCloseable
          * packet is put into the buffer of the channel with the ID matching
          * the integer in the former packet.
          *
+         * @throws  NumberFormatException   if the first packet read cannot
+         *          be formatted into a number.
          * @throws  IOException the stream has been closed and the contained
          *          input stream does not support reading after close, or
          *          another I/O error occurs.
@@ -279,7 +280,7 @@ public class Portal implements AutoCloseable
         {
             try
             {
-                int id = Integer.valueOf(new String(in.readPacket().body, StandardCharsets.UTF_8));
+                int id = Integer.valueOf(in.readPacket().format());
                 Packet p = in.readPacket();
                 channels[id].put(p);
             }
