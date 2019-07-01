@@ -22,20 +22,17 @@ public enum Header implements Headerable
     /** Allows for custom operations encoded in bytes for subprotocol implementations */
     OP(1),
 
-    /** Null reference */
-    NULL(100),
-
     /** Boolean type */
-    BOOLEAN(101),
+    BOOLEAN(100),
 
     /** Integer type */
-    INTEGER(102),
+    INTEGER(101),
 
     /** Double type */
-    DOUBLE(103),
+    DOUBLE(102),
 
     /** String type */
-    STRING(104),
+    STRING(103),
 
     /** Binary false variable used for response */
     BAD(200),
