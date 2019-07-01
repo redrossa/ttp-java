@@ -47,7 +47,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object of type boolean and default {@code 0} footer.
+     * Creates a new packet object of type boolean and default {@code 0} footer.
      *
      * @param   val {@code boolean} value of the data of the packet.
      */
@@ -57,7 +57,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object of type integer and default {@code 0} footer.
+     * Creates a new packet of type integer and default {@code 0} footer.
      *
      * @param   val {@code int} value of the data of the packet.
      */
@@ -67,7 +67,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object of type double and default {@code 0} footer.
+     * Creates a new packet of type double and default {@code 0} footer.
      *
      * @param   val {@code double} value of the data of the packet.
      */
@@ -77,7 +77,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object of type string and default {@code 0} footer.
+     * Creates a new packet of type string and default {@code 0} footer.
      *
      * @param   val {@code String} value of the data of the packet.
      */
@@ -87,7 +87,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object of type {@code header}, of String
+     * Creates a new packet of type {@code header}, of String
      * {@code body} and of unsigned 16-bit {@code footer} specified. This
      * constructor guarantees the header mask specified of this packet exists and
      * that the body is universally encoded.
@@ -104,7 +104,7 @@ public class Packet implements Serializable
     }
 
     /**
-     * Creates a new Packet object with the raw data specified. This constructor
+     * Creates a new packet with the raw data specified. This constructor
      * assumes the caller has already checked that their parameter is appropriate
      * for a packet.
      *
@@ -161,14 +161,24 @@ public class Packet implements Serializable
     }
 
     /**
-     * Returns the string representation of this Packet object.
+     * Returns the string representation of this packet.
      *
-     * @return  a string representation of this Packet object.
+     * @return  a string representation of this packet.
      * @see     Object#toString()
      */
     @Override
     public String toString()
     {
         return String.format("[%03d / %s / %05d]",  header, new String(body, StandardCharsets.UTF_8), (int) footer);
+    }
+
+    /**
+     * Returns the encoded body byte array in UTF-8.
+     *
+     * @return  the encoded body byte array in UTF-8
+     */
+    public String format()
+    {
+        return new String(body, StandardCharsets.UTF_8);
     }
 }
