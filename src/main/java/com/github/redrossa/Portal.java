@@ -35,6 +35,9 @@ public class Portal implements AutoCloseable
     private volatile boolean multiplexed;
     private volatile boolean closed;
 
+    /** Portal name */
+    private final String name;
+
     /** The underlying socket of this portal */
     private final Socket socket;
 
@@ -64,9 +67,10 @@ public class Portal implements AutoCloseable
      * @throws  IOException if an I/O error occurs when creating the
      *          output stream or if the socket is not connected.
      */
-    public Portal(@NotNull Socket socket) throws IOException
+    public Portal(@NotNull Socket socket, String name) throws IOException
     {
         socket.setSoTimeout(0);
+        this.name = name;
         this.socket = socket;
         out = new PacketOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         in = new PacketInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -312,7 +316,7 @@ public class Portal implements AutoCloseable
                 catch (IOException e)
                 {
                     Logger.getLogger(Portal.class.getName())
-                          .log(Level.SEVERE, "portal-"+socket.getRemoteSocketAddress(), e);
+                          .log(Level.SEVERE, "portal-"+name, e);
                 }
             }
             //noinspection ResultOfMethodCallIgnored
