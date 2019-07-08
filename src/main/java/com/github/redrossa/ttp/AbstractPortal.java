@@ -16,7 +16,7 @@ import java.net.Socket;
  * <p>
  * To implement a blocking singleplexed {@code Portal}, the programmer needs
  * to extend this class and simply provide implementations for the {@code transfer}
- * methods.
+ * methods and the {@code close} method.
  * <p>
  * To implement a non-blocking multiplexed {@code Portal}, please see the
  * {@link MultiplexedPortal} abstract class, a subclass of this class modified
