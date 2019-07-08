@@ -1,4 +1,4 @@
-package com.github.redrossa;
+package com.github.redrossa.ttp;
 
 /**
  * The header indicates the standardised type of the data body of

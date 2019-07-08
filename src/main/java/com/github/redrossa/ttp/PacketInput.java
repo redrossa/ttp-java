@@ -1,4 +1,4 @@
-package com.github.redrossa;
+package com.github.redrossa.ttp;
 
 import java.io.IOException;
 
