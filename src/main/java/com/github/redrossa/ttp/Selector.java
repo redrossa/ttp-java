@@ -40,11 +40,6 @@ public abstract class Selector implements Runnable
     private Thread thread = new Thread(this);
 
     /**
-     * Constructor for use by subclasses.
-     */
-    protected Selector() { }
-
-    /**
      * Creates a new Selector with the specified multiplexed portal.
      *
      * @param   portal  the multiplexed portal.
