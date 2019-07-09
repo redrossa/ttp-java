@@ -37,6 +37,8 @@ public abstract class MultiplexedPortal extends AbstractPortal
      * Creates a new Portal with the specified socket.
      *
      * @param   socket  the underlying socket.
+     * @param   name    name of this portal.
+     * @param   chount  the number of underlying channels.
      * @throws  SocketException if there is an error in the underlying
      *          protocol, such as a TCP error.
      * @throws  IOException if an I/O error occurs when creating the
@@ -61,4 +63,26 @@ public abstract class MultiplexedPortal extends AbstractPortal
     {
         return channels[i];
     }
+
+    /**
+     * Returns the number of channels in the underlying channel array.
+     *
+     * @return  the number of channels in the array.
+     */
+    public int getChannelCount()
+    {
+        return channels.length;
+    }
+
+    @Override
+    public abstract Packet transfer(boolean v);
+
+    @Override
+    public abstract Packet transfer(int v);
+
+    @Override
+    public abstract Packet transfer(double v);
+
+    @Override
+    public abstract Packet transfer(String v);
 }
