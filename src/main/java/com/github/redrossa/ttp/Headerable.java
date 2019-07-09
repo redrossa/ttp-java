@@ -38,7 +38,7 @@ public interface Headerable
      * @param   mask    an {@code int} value whose associated enum is
      *                  to be returned.
      * @param   clazz   the enum that implements this interface.
-     * @return  the Header enum associated with {@code mask} or null
+     * @return  the header enum associated with {@code mask} or null
      *          if not found.
      */
     static <T extends Headerable> T valueOf(int mask, @NotNull Class<T> clazz)

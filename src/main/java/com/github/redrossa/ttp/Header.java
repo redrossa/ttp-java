@@ -65,4 +65,23 @@ public enum Header implements Headerable
     {
         return mask;
     }
+
+    /**
+     * Returns the header enum associated with {@code mask}
+     * for enum {@code Header} class. If no enum is associated
+     * with it, null is returned.
+     * <p>
+     * This method simply performs
+     * {@code Headerable.valueOf(mask, Header.class} and returns the
+     * result.
+     *
+     * @param   mask    an {@code int} value whose associated enum is
+     *                  to be returned.
+     * @return  the Header enum associated with {@code mask} or null
+     *          if not found.
+     */
+    public static Header valueOf(int mask)
+    {
+        return Headerable.valueOf(mask, Header.class);
+    }
 }
