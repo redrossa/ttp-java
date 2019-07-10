@@ -87,62 +87,6 @@ public abstract class AbstractPortal implements Portal
         return in.readPacket();
     }
 
-    /**
-     * Writes a boolean type packet with the specified value into the
-     * underlying output stream and flushes the stream. Blocks until
-     * respond packet from the remote endpoint is available for reading
-     * from the input stream. Returns this respond packet.
-     *
-     * @param   v   the specified boolean value
-     * @return  the respond packet from the remote endpoint.
-     * @throws  IOException the stream has been closed and the contained
-     *          input stream does not support reading after close, or
-     *          another I/O error occurs.
-     */
-    public abstract Packet transfer(boolean v) throws IOException;
-
-    /**
-     * Writes a integer type packet with the specified value into the
-     * underlying output stream and flushes the stream. Blocks until
-     * respond packet from the remote endpoint is available for reading
-     * from the input stream. Returns this respond packet.
-     *
-     * @param   v   the specified boolean value
-     * @return  the respond packet from the remote endpoint.
-     * @throws  IOException the stream has been closed and the contained
-     *          input stream does not support reading after close, or
-     *          another I/O error occurs.
-     */
-    public abstract Packet transfer(int v) throws IOException;
-
-    /**
-     * Writes a double type packet with the specified value into the
-     * underlying output stream and flushes the stream. Blocks until
-     * respond packet from the remote endpoint is available for reading
-     * from the input stream. Returns this respond packet.
-     *
-     * @param   v   the specified boolean value
-     * @return  the respond packet from the remote endpoint.
-     * @throws  IOException the stream has been closed and the contained
-     *          input stream does not support reading after close, or
-     *          another I/O error occurs.
-     */
-    public abstract Packet transfer(double v) throws IOException;
-
-    /**
-     * Writes a string type packet with the specified value into the
-     * underlying output stream and flushes the stream. Blocks until
-     * respond packet from the remote endpoint is available for reading
-     * from the input stream. Returns this respond packet.
-     *
-     * @param   v   the specified boolean value
-     * @return  the respond packet from the remote endpoint.
-     * @throws  IOException the stream has been closed and the contained
-     *          input stream does not support reading after close, or
-     *          another I/O error occurs.
-     */
-    public abstract Packet transfer(@NotNull String v) throws IOException;
-
     public String getName()
     {
         return name;
