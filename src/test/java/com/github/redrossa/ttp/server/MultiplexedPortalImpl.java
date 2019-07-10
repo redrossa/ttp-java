@@ -2,7 +2,6 @@ package com.github.redrossa.ttp.server;
 
 import com.github.redrossa.ttp.MultiplexedPortal;
 import com.github.redrossa.ttp.Packet;
-import com.github.redrossa.ttp.Selector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.net.Socket;
 
 public class MultiplexedPortalImpl extends MultiplexedPortal
 {
-    protected Selector selector = new SelectorImpl(this);
     /**
      * Creates a new Portal with the specified socket.
      *
