@@ -9,6 +9,8 @@ import java.io.IOException;
  * @author  Adriano Raksi
  * @version 1.0-SNAPSHOT
  * @since   2019-06-19
+ * @see     PacketOutput
+ * @see     PacketInputStream
  */
 public interface PacketInput
 {
