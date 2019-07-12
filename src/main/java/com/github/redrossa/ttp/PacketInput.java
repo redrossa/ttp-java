@@ -4,7 +4,8 @@ import java.io.IOException;
 
 /**
  * The {@code PacketInput} interface provides for reconstructing
- * a Packet object with data read from a binary stream.
+ * a {@link Packet} object from a series of bytes from a binary
+ * stream.
  *
  * @author  Adriano Raksi
  * @version 1.0-SNAPSHOT
@@ -15,18 +16,29 @@ import java.io.IOException;
 public interface PacketInput
 {
     /**
-     * Using underlying DataInputStream, attempts to read all the
-     * component instances of a packet object, starting from {@code int}
-     * header mask to {@code char} footer. Once all components of a
-     * complete packet object is read, it reconstructs the packet using
-     * those components.
+     * Reads data from a binary stream and constructs a {@code Packet}
+     * based on the data.
+     * <p>
+     * The first four incoming bytes read represent the header {@code int}
+     * value of the {@code Packet}. The next four bytes represent the
+     * {@code int} length of the body byte array. Utilise this value by
+     * creating a byte buffer for reading the next chunk of bytes: body
+     * of the {@code Packet}. The number of bytes of the body always equals
+     * the previous latest four bytes {@code int} value. An {@link IOException}
+     * should be thrown if the number of bytes of the body read is less than
+     * that {@code int} value. Finally, the series of bytes concludes with
+     * two bytes representing the footer {@code char} value.
+     * </p>
+     * This method should construct the {@code Packet} from the data
+     * read using the package-private constructor
+     * {@link Packet#Packet(int, byte[], char)}.
+     * The {@code int} value representing the length of the body byte array
+     * can simply be discarded.
      *
-     * @return  reference to Packet object constructed from data read
-     *          from a binary stream.
-     * @throws  IOException the stream has been closed and the contained
-     *          input stream does not support reading after close, or
-     *          another I/O error occurs.
-     * @see     java.io.DataInputStream
+     * @return A {@code Packet} constructed from the data read.
+     * @throws IOException the stream has been closed and the contained
+     *         input stream does not support reading after close, or
+     *         another I/O error occurs.
      */
     Packet readPacket() throws IOException;
 }
