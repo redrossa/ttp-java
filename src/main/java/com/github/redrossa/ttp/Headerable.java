@@ -52,7 +52,7 @@ public interface Headerable
     /**
      * Returns the header instance associated with the specified mask
      * of the specified class that implements this interface. If no
-     * mask is associated with a header instance in the specified class,
+     * header instance in the specified class is associated with the mask,
      * null is returned.
      * <p>
      * It is recommended for classes or enums implementing this
