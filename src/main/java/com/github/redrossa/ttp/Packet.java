@@ -67,7 +67,7 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      * </p>
      *
-     * @param val    the {@code double} value for the body.
+     * @param val the {@code double} value for the body.
      * @param footer the footer value
      */
     public Packet(boolean val, int footer)
@@ -96,7 +96,7 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      * </p>
      *
-     * @param val    the {@code double} value for the body.
+     * @param val the {@code double} value for the body.
      * @param footer the footer value
      */
     public Packet(int val, int footer)
@@ -125,7 +125,7 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      * </p>
      *
-     * @param val    the {@code double} value for the body.
+     * @param val the {@code double} value for the body.
      * @param footer the footer value
      */
     public Packet(double val, int footer)
@@ -154,7 +154,7 @@ public final class Packet implements Serializable
      * value is to be encoded in UTF-8.
      * </p>
      *
-     * @param val    the {@code String} value for the body.
+     * @param val the {@code String} value for the body.
      * @param footer the footer value.
      */
     public Packet(@NotNull String val, int footer)
@@ -175,7 +175,7 @@ public final class Packet implements Serializable
      * </p>
      *
      * @param header the header value.
-     * @param body   the body value.
+     * @param body the body value.
      * @param footer the footer value.
      */
     public Packet(@NotNull Headerable header, @NotNull String body, int footer)
@@ -193,7 +193,7 @@ public final class Packet implements Serializable
      * </p>
      *
      * @param header the header value.
-     * @param body   the body data.
+     * @param body the body data.
      * @param footer the footer value.
      */
     Packet(int header, byte[] body, char footer)
@@ -228,7 +228,7 @@ public final class Packet implements Serializable
      * Indicates whether this {@code Packet} is "equal" to {@code obj}. This method
      * is overridden to take in consideration of the fields of this {@code Packet}.
      *
-     * @param obj the reference object with which to compare.
+     * @param  obj the reference object with which to compare.
      * @return {@code true} if this object is the same as the obj
      *         argument; {@code false} otherwise.
      */
