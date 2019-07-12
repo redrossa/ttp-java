@@ -28,7 +28,7 @@ public interface PacketInput
      * should be thrown if the number of bytes of the body read is less than
      * that {@code int} value. Finally, the series of bytes concludes with
      * two bytes representing the footer {@code char} value.
-     * </p>
+     * <p>
      * This method should construct the {@code Packet} from the data
      * read using the package-private constructor
      * {@link Packet#Packet(int, byte[], char)}.

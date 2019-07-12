@@ -24,7 +24,7 @@ public interface PacketOutput
      * {@code int} length of the body byte array, followed by the actual
      * body byte array. Finally, the series of bytes concludes with
      * two bytes representing the footer {@code char} value.
-     * </p>
+     * <p>
      * This method should deconstruct the {@code Packet} by retrieving its
      * fields from {@link Packet#header}, {@link Packet#body} and
      * {@link Packet#footer}.

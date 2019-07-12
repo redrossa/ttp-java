@@ -12,7 +12,7 @@ import java.util.Arrays;
  * <p>
  * The header is a 32-bit integer value that indicates what type of packet this is
  * and what can be generalised about the data that follows: the body.
- * </p>
+ * <p>
  * The body is the main, information-rich data component. This is where the data which the
  * programmer intends to deliver is stored.
  * <p>
@@ -20,7 +20,6 @@ import java.util.Arrays;
  * and essentially the body. But unlike the header, which is restricted to implementations
  * of {@link Headerable}, the footer provides for higher customisability, where the programmer
  * specifies and parses the value in their own programmes themselves.
- * </p>
  *
  * @author  Adriano Raksi
  * @version 1.0-SNAPSHOT
@@ -51,7 +50,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      */
@@ -65,7 +63,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
@@ -80,7 +77,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      */
@@ -94,7 +90,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
@@ -109,7 +104,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      */
@@ -123,7 +117,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code double}
      * value is converted to {@code String} to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
@@ -138,7 +131,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code String}
      * value is to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code String} value for the body.
      */
@@ -152,7 +144,6 @@ public final class Packet implements Serializable
      * <p>
      * The {@code String}
      * value is to be encoded in UTF-8.
-     * </p>
      *
      * @param val the {@code String} value for the body.
      * @param footer the footer value.
@@ -172,7 +163,6 @@ public final class Packet implements Serializable
      * encoded in UTF-8 encoding, by encoding the data body in this constructor
      * itself rather than by the caller. Agreeing to the contract, a packet body
      * must always be encoded in UTF-8.
-     * </p>
      *
      * @param header the header value.
      * @param body the body value.
@@ -190,7 +180,6 @@ public final class Packet implements Serializable
      * passed by the caller are appropriate for constructing this packet object.
      * It is the responsibility of the caller to make sure the arguments passed
      * to this constructor are appropriate.
-     * </p>
      *
      * @param header the header value.
      * @param body the body data.
@@ -210,7 +199,6 @@ public final class Packet implements Serializable
      * <p>
      * The hashcode
      * depends on the fields of this {@code Packet}.
-     * </p>
      *
      * @return hashcode of this {@code Packet}.
      */
@@ -251,7 +239,6 @@ public final class Packet implements Serializable
      * The string representation consists of this {@code Packet}'s fields: header value,
      * body in {@code String} format and footer value. The fields are enclosed in square
      * brackets ("{@code []}") and separated by "{@code / }" (space, forward slash, space).
-     * </p>
      *
      * @return a string representation of this {@code Packet}.
      */
@@ -266,7 +253,6 @@ public final class Packet implements Serializable
      * <p>
      * Encoding should never fail because {@code body} is always encoded in UTF-8. A failure
      * indicates an invalid creation of {@code Packet} outside of this package.
-     * </p>
      *
      * @return the UTF-8-decoded {@code body} data byte array.
      */
