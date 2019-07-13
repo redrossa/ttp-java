@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2019 Adriano Raksi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.github.redrossa.ttp;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,10 +77,11 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      *
      * @param val the {@code double} value for the body.
+     * @see   Packet#Packet(boolean, int)
      */
     public Packet(boolean val)
     {
-        this(Header.BOOLEAN, String.valueOf(val), 0);
+        this(Header.BOOLEAN, val, 0);
     }
 
     /**
@@ -66,10 +92,11 @@ public final class Packet implements Serializable
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
+     * @see   Packet#Packet(Headerable, Object, int)
      */
     public Packet(boolean val, int footer)
     {
-        this(Header.DOUBLE, String.valueOf(val), footer);
+        this(Header.DOUBLE, val, footer);
     }
 
     /**
@@ -79,10 +106,11 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      *
      * @param val the {@code double} value for the body.
+     * @see   Packet#Packet(int, int)
      */
     public Packet(int val)
     {
-        this(Header.INTEGER, String.valueOf(val), 0);
+        this(val, 0);
     }
 
     /**
@@ -93,10 +121,11 @@ public final class Packet implements Serializable
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
+     * @see   Packet#Packet(Headerable, Object, int)
      */
     public Packet(int val, int footer)
     {
-        this(Header.DOUBLE, String.valueOf(val), footer);
+        this(Header.DOUBLE, val, footer);
     }
 
     /**
@@ -106,10 +135,11 @@ public final class Packet implements Serializable
      * value is converted to {@code String} to be encoded in UTF-8.
      *
      * @param val the {@code double} value for the body.
+     * @see   Packet#Packet(double, int)
      */
     public Packet(double val)
     {
-        this(Header.DOUBLE, String.valueOf(val), 0);
+        this(val, 0);
     }
 
     /**
@@ -120,10 +150,11 @@ public final class Packet implements Serializable
      *
      * @param val the {@code double} value for the body.
      * @param footer the footer value
+     * @see   Packet#Packet(Headerable, Object, int)
      */
     public Packet(double val, int footer)
     {
-        this(Header.DOUBLE, String.valueOf(val), footer);
+        this(Header.DOUBLE, val, footer);
     }
 
     /**
@@ -133,6 +164,7 @@ public final class Packet implements Serializable
      * value is to be encoded in UTF-8.
      *
      * @param val the {@code String} value for the body.
+     * @see   Packet#Packet(String, int)
      */
     public Packet(@NotNull String val)
     {
@@ -147,6 +179,7 @@ public final class Packet implements Serializable
      *
      * @param val the {@code String} value for the body.
      * @param footer the footer value.
+     * @see   Packet#Packet(Headerable, Object, int)
      */
     public Packet(@NotNull String val, int footer)
     {
@@ -158,7 +191,7 @@ public final class Packet implements Serializable
      * <p>
      * Used by classes outside of this package, this constructor makes sure
      * the would-be header value is appropriate, either it is a {@link Header}
-     * enum or it is a custom implementor of the {@link Headerable} object.
+     * enum or it is a custom instance of a class implementing {@link Headerable}.
      * This constructor also makes sure that the data body of this packet is
      * encoded in UTF-8 encoding, by encoding the data body in this constructor
      * itself rather than by the caller. Agreeing to the contract, a packet body
@@ -167,10 +200,11 @@ public final class Packet implements Serializable
      * @param header the header value.
      * @param body the body value.
      * @param footer the footer value.
+     * @see   Packet#Packet(int, byte[], char)
      */
-    public Packet(@NotNull Headerable header, @NotNull String body, int footer)
+    private Packet(@NotNull Headerable header, @NotNull Object body, int footer)
     {
-        this(header.getMask(), body.getBytes(StandardCharsets.UTF_8), (char) footer);
+        this(header.getMask(), body.toString().getBytes(StandardCharsets.UTF_8), (char) footer);
     }
 
     /**
@@ -266,7 +300,7 @@ public final class Packet implements Serializable
      *
      * @return the {@code header} value.
      */
-    public int header()
+    public int getHeader()
     {
         return header;
     }
@@ -276,7 +310,7 @@ public final class Packet implements Serializable
      *
      * @return the UTF-8 encoded {@code body} data byte array.
      */
-    public byte[] body()
+    public byte[] getBody()
     {
         return body;
     }
@@ -286,7 +320,7 @@ public final class Packet implements Serializable
      *
      * @return the {@code footer} value.
      */
-    public char footer()
+    public char getFooter()
     {
         return footer;
     }
