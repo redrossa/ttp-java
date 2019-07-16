@@ -202,7 +202,7 @@ public final class Packet implements Serializable
      * @param footer the footer value.
      * @see   Packet#Packet(int, byte[], char)
      */
-    private Packet(@NotNull Headerable header, @NotNull Object body, int footer)
+    public Packet(@NotNull Headerable header, @NotNull Object body, int footer)
     {
         this(header.getMask(), body.toString().getBytes(StandardCharsets.UTF_8), (char) footer);
     }
