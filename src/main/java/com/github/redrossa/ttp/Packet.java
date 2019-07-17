@@ -28,6 +28,7 @@ package com.github.redrossa.ttp;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -63,6 +64,9 @@ public final class Packet implements Serializable
 
     /** Unsigned 16-bit type to store further customisation of a {@code Packet} */
     final char footer;
+
+    /** Size of this packet in bytes */
+    final int size;
 
     /** Default constructor creates a no-operation {@code Packet}. */
     public Packet()
@@ -196,15 +200,20 @@ public final class Packet implements Serializable
      * encoded in UTF-8 encoding, by encoding the data body in this constructor
      * itself rather than by the caller. Agreeing to the contract, a packet body
      * must always be encoded in UTF-8.
+     * <p>
+     * If {@code header} is {@code null}, this packet is simply a {@link Header#NOP}.
+     * If {@code body} is {@code null}, the body will be assigned a zero-length byte array.
      *
      * @param header the header value.
      * @param body the body value.
      * @param footer the footer value.
      * @see   Packet#Packet(int, byte[], char)
      */
-    public Packet(@NotNull Headerable header, @NotNull Object body, int footer)
+    public Packet(Headerable header, Object body, int footer)
     {
-        this(header.getMask(), body.toString().getBytes(StandardCharsets.UTF_8), (char) footer);
+        this(header == null ? 0 : header.getMask(),
+             body == null ? null : body.toString().getBytes(StandardCharsets.UTF_8),
+             (char) footer);
     }
 
     /**
@@ -214,6 +223,9 @@ public final class Packet implements Serializable
      * passed by the caller are appropriate for constructing this packet object.
      * It is the responsibility of the caller to make sure the arguments passed
      * to this constructor are appropriate.
+     * <p>
+     * If {@code header} is {@code 0}, this packet is simply a {@link Header#NOP}.
+     * If {@code body} is {@code null}, the body will be assigned a zero-length byte array.
      *
      * @param header the header value.
      * @param body the body data.
@@ -222,10 +234,11 @@ public final class Packet implements Serializable
     Packet(int header, byte[] body, char footer)
     {
         if (body == null)
-            throw new NullPointerException();
+            body = new byte[0];
         this.header = header;
         this.body = body;
         this.footer = footer;
+        this.size = 4 + body.length + 2;    // size of int header + byte[] body + char footer
     }
 
     /**
@@ -272,27 +285,17 @@ public final class Packet implements Serializable
      * <p>
      * The string representation consists of this {@code Packet}'s fields: header value,
      * body in {@code String} format and footer value. The fields are enclosed in square
-     * brackets ("{@code []}") and separated by "{@code / }" (space, forward slash, space).
+     * brackets ("{@code []}") and separated by "{@code :}" (colon). The header value is
+     * always formatted in three digits and the footer is always formatted in five digits.
+     * Therefore, the string representation of a {@code Packet} is always at least 12
+     * characters long.
      *
      * @return a string representation of this {@code Packet}.
      */
     @Override
     public String toString()
     {
-        return String.format("[%03d / %s / %05d]",  header, new String(body, StandardCharsets.UTF_8), (int) footer);
-    }
-
-    /**
-     * Returns the UTF-8-decoded {@code body} data byte array.
-     * <p>
-     * Encoding should never fail because {@code body} is always encoded in UTF-8. A failure
-     * indicates an invalid creation of {@code Packet} outside of this package.
-     *
-     * @return the UTF-8-decoded {@code body} data byte array.
-     */
-    public String format()
-    {
-        return new String(body, StandardCharsets.UTF_8);
+        return String.format("[%03d:%s:%05d]",  header, new String(body, StandardCharsets.UTF_8), (int) footer);
     }
 
     /**
@@ -323,5 +326,128 @@ public final class Packet implements Serializable
     public char getFooter()
     {
         return footer;
+    }
+
+    /**
+     * Returns the total size of all fields in bytes.
+     *
+     * @return the {@code size}.
+     */
+    public int getSize()
+    {
+        return size;
+    }
+
+    /**
+     * Returns a {@code Packet} object holding the value extracted from the specified
+     * string when parsed with the {@code Header} type for the header mask.
+     * <p>
+     * The result is a {@code Packet} object that represents the packet value specified
+     * by the string. The string must follow the {@code Packet} pattern as represented
+     * by {@link Packet#toString()}.
+     * <p>
+     * This method simply performs {@code valueOf(s, Header.class)} and returns
+     * the result.
+     *
+     * @param  s the {@code String} containing the {@code Packet} representation
+     *         to be parsed.
+     * @return the {@code Packet} represented by the {@code String} argument and
+     *         {@link Header} type header mask.
+     * @throws IllegalArgumentException if the specified {@code String} does
+     *         not contain a parsable {@code Packet} with a {@code Header} type
+     *         header mask.
+     */
+    public static Packet valueOf(@NotNull String s)
+    {
+        return valueOf(s, Header.class);
+    }
+
+    /**
+     * Returns a {@code Packet} object holding the value extracted from the specified
+     * string when parsed with the {@code Headerable} given by the second argument.
+     * <p>
+     * The result is a {@code Packet} object that represents the packet value specified
+     * by the string. The string must follow the {@code Packet} pattern as represented
+     * by {@link Packet#toString()}.
+     * <p>
+     * The {@code Headerable} argument must implement its own {@code valueOf} static method, as
+     * this method calls it through reflection to validate the header mask. All exceptions
+     * thrown through this reflection is either wrapped around {@code IllegalArgumentException}
+     * and rethrown or, like {@code IllegalAccessException}, ignored because overloaded valueOf
+     * static method is always implemented as public.
+     *
+     * @param  s the {@code String} containing the {@code Packet} representation
+     *         to be parsed.
+     * @param  headerable the {@code Headerable} to validate the header mask.
+     * @return the {@code Packet} represented by the {@code String} argument in the
+     *         specified {@code Headerable}.
+     * @throws IllegalArgumentException if the specified {@code String} does
+     *         not contain a parsable {@code Packet} or the specified {@code Headerable}
+     *         does not implement its own {@code valueOf} static method.
+     */
+    public static Packet valueOf(@NotNull String s, @NotNull Class<? extends Headerable> headerable)
+    {
+        Headerable header = null;
+        String body;
+        int headerMask, footer, len = s.length();
+
+        if (len < 12)
+            throw new IllegalArgumentException(s);
+        if (!(s.startsWith("[") && s.endsWith("]")))        // check enclosing brackets
+            throw new IllegalArgumentException(s);
+        s = s.substring(1, s.length()-1);
+        try                                                 // check header and footer
+        {
+            headerMask = Integer.valueOf(s.substring(0, 3));
+            footer = Integer.valueOf(s.substring(s.length()-5));
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException(s);
+        }
+        s = s.substring(3, s.length()-4);
+        if (!(s.startsWith(":") && s.endsWith(":")))        // check colons
+            throw new IllegalArgumentException(s);
+        s = s.substring(1, s.length()-1);
+        body = s;
+
+        try
+        {
+            header = (Headerable) headerable.getMethod("valueOf", int.class).invoke(null, headerMask);
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new IllegalArgumentException("valueOf static method not implemented for " + headerable.getName());
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new IllegalArgumentException(e.getCause());
+        }
+        catch (IllegalAccessException ignored) { }
+
+        return new Packet(header, body, footer);
+    }
+
+    /**
+     * Returns the object type of the specified {@code Packet} body
+     * according to its header. Requires explicit conversion by caller.
+     *
+     * @param  p the {@code Packet} to format.
+     * @return the object type of the specified {@code Packet} body.
+     */
+    public static Object format(@NotNull Packet p)
+    {
+        String valStr = new String(p.getBody(), StandardCharsets.UTF_8);
+        switch (Header.valueOf(p.header))
+        {
+            case BOOLEAN:
+                return Boolean.valueOf(valStr);
+            case INTEGER:
+                return Integer.valueOf(valStr);
+            case DOUBLE:
+                return Double.valueOf(valStr);
+            default:
+                return valStr;
+        }
     }
 }
