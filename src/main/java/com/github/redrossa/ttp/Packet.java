@@ -417,7 +417,7 @@ public final class Packet implements Serializable
         }
         catch (NoSuchMethodException e)
         {
-            throw new IllegalArgumentException("valueOf static method not implemented for " + headerable.getName());
+            throw new IllegalArgumentException("valueOf static method not implemented by " + headerable.getName());
         }
         catch (InvocationTargetException e)
         {
