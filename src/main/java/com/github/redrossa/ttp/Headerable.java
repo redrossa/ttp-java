@@ -30,14 +30,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 /**
- * This interface provides the usability of an instance class or
- * enum as a header of a {@link Packet}. Implementation of this
- * interface must declare a field in their instances that holds a
- * unique {@code int} value called a mask. Ideally, the instances
- * must be static and their respective masks unique from other
- * masks of other instances of that same class or enum. Additionally,
- * the class or enum must provide an instance implementation of the
- * {@link Headerable#getMask()} which returns its mask value.
+ * This interface provides the usability of an instance enum as a
+ * header of a {@link Packet}. Implementation of this interface must
+ * declare a field in their instances that holds a unique {@code int}
+ * value called a mask. Ideally, the instances must be static and their
+ * respective masks unique from other masks of other instances of that
+ * same enum. Additionally, the enum must provide an instance
+ * implementation of the {@link Headerable#getMask()} which returns
+ * its mask value.
  * <p>
  * A mask, in decimal, is composed of three digits. The first digit
  * indicates the category and the last two indicates the value of
@@ -46,18 +46,18 @@ import java.util.Arrays;
  * in a {@code Headerable} implementation, there can only be a maximum
  * of 10 types of categories (from 0XX to 9XX inclusive). This
  * information of organising into categories is not, however, stored
- * by the {@code Packet}, not to mention the class of the implementation
+ * by the {@code Packet}, not to mention the enum of the implementation
  * of this interface. Therefore, it is up to the programmer to decode
  * into what type of {@code Headerable} implementation is the
  * {@code Packet} delivering.
  * <p>
  * The {@link Headerable#valueOf(int, Class)} method allows the programmer
- * to retrieve which instance in the specified {@code Headerable} class
+ * to retrieve which instance in the specified {@code Headerable} type
  * implementation is the header of the {@code Packet}, especially since
- * the header information is stored in the {@code Packet} raw (in
- * {@code int}). It is recommended for classes or enums implementing this
- * interface to provide an implementation of their own {@code valueOf} method
- * which may call {@code Headerable}'s {@code valueOf} method that passes its
+ * the header information is stored in the {@code Packet} raw (in {@code int}).
+ * It is recommended for enums implementing this interface to provide an
+ * implementation of their own {@code valueOf} method which may call
+ * {@code Headerable}'s {@code valueOf} method that passes its
  * own class and returns the result.
  *
  * @author  Adriano Raksi
@@ -80,20 +80,24 @@ public interface Headerable
      * header instance in the specified class is associated with the mask,
      * null is returned.
      * <p>
-     * It is recommended for classes or enums implementing this
-     * interface to provide an implementation of their own {@code valueOf} method
-     * which may call this method that passes its own class and returns the result.
+     * It is recommended for enums implementing this interface to provide
+     * an implementation of their own {@code valueOf} method which may call
+     * this method that passes its own class and returns the result.
      *
      * @param  mask the mask to find with which a header is associated.
+     * @param  <T>  the {@code Headerable} type whose header constant is to be returned.
      * @param  clazz the class that implements this interface.
-     * @return the header instance associated with the specified mask
-     *         or null if not found.
+     * @return the header instance associated with the specified mask.
+     * @throws IllegalArgumentException if the specified {@code Headerable} type has
+     *         no constant with the specified mask, or the specified
+     *         class object does not represent an enum type.
      */
     static <T extends Headerable> T valueOf(int mask, @NotNull Class<T> clazz)
     {
         return Arrays.stream(clazz.getEnumConstants())
                      .filter(header -> header.getMask() == mask)
                      .findFirst()
-                     .orElse(null);
+                     .orElseThrow(() -> new IllegalArgumentException(
+                             "No enum constant " + clazz.getCanonicalName() + "." + mask));
     }
 }
