@@ -51,7 +51,7 @@ import java.util.Arrays;
  * @version 1.0-SNAPSHOT
  * @since   2019-06-19
  */
-public final class Packet implements Serializable
+public final class Packet implements Serializable, Comparable<Packet>
 {
     /** Class serial version UID */
     private static final long serialVersionUID = 7474662397063358803L;
@@ -278,6 +278,32 @@ public final class Packet implements Serializable
             return false;
         Packet tmp = (Packet) obj;
         return tmp.header == header && Arrays.equals(tmp.body, body) && tmp.footer == footer;
+    }
+
+    /**
+     * Compares this {@code Packet} with the specified {@code Packet} for order.
+     * Returns a negative integer, zero, or a positive integer as this {@code Packet}
+     * is less than, equal to, or greater than the specified {@code Packet}.
+     * <p>
+     * This method compares the header, body and footer values of this {@code Packet}
+     * and the specified {@code Packet}. This method subtracts the header and footer
+     * values of the specified {@code Packet} from their similar respective fields
+     * of this {@code Packet}. The body of both {@code Packet}s are compared
+     * lexicographically by performing {@code Arrays.compare(body, o.body)}. The
+     * results of all calculations of the three fields are then summed up and returned;
+     *
+     * @param  o the {@code Packet} to be compared.
+     * @return a negative integer, zero, or a positive integer as this {@code Packet}
+     *         is less than, equal to, or greater than the specified {@code Packet}.
+     * @see    Arrays#compare(byte[], byte[])
+     */
+    @Override
+    public int compareTo(@NotNull Packet o)
+    {
+        int h = header - o.header;
+        int b = Arrays.compare(body, o.body);
+        int f = footer - o.footer;
+        return h + b + f;
     }
 
     /**
