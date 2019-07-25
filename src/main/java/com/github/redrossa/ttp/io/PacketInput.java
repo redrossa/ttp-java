@@ -23,7 +23,7 @@
  *
  */
 
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.io;
 
 import java.io.IOException;
 

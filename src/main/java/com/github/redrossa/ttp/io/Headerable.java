@@ -23,10 +23,11 @@
  *
  */
 
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.io;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 /**
@@ -75,10 +76,18 @@ public interface Headerable
     int getMask();
 
     /**
+     * Returns the type of the content that resides with this header
+     * in a {@code Packet}.
+     *
+     * @return the content type.
+     */
+    Class getType();
+
+    /**
      * Returns the header instance associated with the specified mask
      * of the specified class that implements this interface. If no
      * header instance in the specified class is associated with the mask,
-     * null is returned.
+     * an {@code IllegalArgumentException} is returned.
      * <p>
      * It is recommended for enums implementing this interface to provide
      * an implementation of their own {@code valueOf} method which may call

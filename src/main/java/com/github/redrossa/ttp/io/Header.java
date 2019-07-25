@@ -23,7 +23,7 @@
  *
  */
 
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.io;
 
 /**
  * The {@code Header} class provides an implementation of the
@@ -55,40 +55,47 @@ package com.github.redrossa.ttp;
 public enum Header implements Headerable
 {
     /** No operation or placeholder */
-    NOP(0),
+    NOP(0, String.class),
 
     /** Allows for custom operation implementations */
-    OP(1),
+    OP(1, String.class),
 
     /** Boolean type */
-    BOOLEAN(100),
+    BOOLEAN(100, Boolean.class),
 
     /** Integer type */
-    INTEGER(101),
+    INTEGER(101, Integer.class),
 
     /** Double type */
-    DOUBLE(102),
+    DOUBLE(102, Double.class),
 
     /** String type */
-    STRING(103),
+    STRING(103, String.class),
+
+    /** Packet type */
+    PACKET(104, Packet.class),
 
     /** Binary false response */
-    BAD(200),
+    BAD(200, String.class),
 
     /** Binary true response */
-    OK(201);
+    OK(201, String.class);
 
     /** The underlying mask */
     private final int mask;
+
+    /** The class type of the content of this header */
+    private final Class type;
 
     /**
      * The sole constructor of {@code Header}.
      *
      * @param mask the mask of this {@code Header}.
      */
-    Header(int mask)
+    Header(int mask, Class type)
     {
         this.mask = mask;
+        this.type = type;
     }
 
     /**
@@ -102,6 +109,20 @@ public enum Header implements Headerable
     public final int getMask()
     {
         return mask;
+    }
+
+    /**
+     * See the general contract of the {@code getType}
+     * method of {@code Headerable}.
+     * <p>
+     * Returns the type of the content that resides with this header
+     * in a {@code Packet}.
+     *
+     * @return the content type.
+     */
+    public final Class getType()
+    {
+        return type;
     }
 
     /**

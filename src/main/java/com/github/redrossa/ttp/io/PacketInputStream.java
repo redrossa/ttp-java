@@ -23,7 +23,7 @@
  *
  */
 
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.io;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +31,7 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 
 /**
  * A {@code PacketInputStream} lets an application read {@link Packet}s

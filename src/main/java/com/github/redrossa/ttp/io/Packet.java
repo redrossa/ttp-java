@@ -23,7 +23,7 @@
  *
  */
 
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.io;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -188,6 +188,35 @@ public final class Packet implements Serializable, Comparable<Packet>
     public Packet(@NotNull String val, int footer)
     {
         this(Header.STRING, val, footer);
+    }
+
+    /**
+     * Creates a {@code Packet} of type {@link Header#PACKET} and default {@code 0} footer.
+     * <p>
+     * The {@code String}
+     * value is to be encoded in UTF-8.
+     *
+     * @param val the {@code Packet} value for the body.
+     * @see   Packet#Packet(Headerable, Object, int)
+     */
+    public Packet(@NotNull Packet val)
+    {
+        this(val, 0);
+    }
+
+    /**
+     * Creates a {@code Packet} of type {@link Header#PACKET} and footer specified.
+     * <p>
+     * The {@code String}
+     * value is to be encoded in UTF-8.
+     *
+     * @param val the {@code Packet} value for the body.
+     * @param footer the footer value.
+     * @see   Packet#Packet(Headerable, Object, int)
+     */
+    public Packet(@NotNull Packet val, int footer)
+    {
+        this(Header.PACKET, val, footer);
     }
 
     /**
@@ -431,26 +460,12 @@ public final class Packet implements Serializable, Comparable<Packet>
         {
             throw new IllegalArgumentException(s);
         }
-        s = s.substring(3, s.length()-4);
+        s = s.substring(3, s.length()-5);
         if (!(s.startsWith(":") && s.endsWith(":")))        // check colons
             throw new IllegalArgumentException(s);
         s = s.substring(1, s.length()-1);
         body = s;
-
-        try
-        {
-            header = (Headerable) headerable.getMethod("valueOf", int.class).invoke(null, headerMask);
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new IllegalArgumentException("valueOf static method not implemented by " + headerable.getName());
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new IllegalArgumentException(e.getCause());
-        }
-        catch (IllegalAccessException ignored) { }
-
+        header = Headerable.valueOf(headerMask, headerable);
         return new Packet(header, body, footer);
     }
 
@@ -472,6 +487,8 @@ public final class Packet implements Serializable, Comparable<Packet>
                 return Integer.valueOf(valStr);
             case DOUBLE:
                 return Double.valueOf(valStr);
+            case PACKET:
+                return Packet.valueOf(valStr);
             default:
                 return valStr;
         }
