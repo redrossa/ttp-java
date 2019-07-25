@@ -1,23 +1,49 @@
-package com.github.redrossa.ttp;
+package com.github.redrossa.ttp.net;/*
+ * MIT License
+ *
+ * Copyright (c) 2019 Adriano Raksi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 
+import com.github.redrossa.ttp.io.Packet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * TODO FIX DOCUMENTATION PLSSSSS
+ *
  * A channel allows for a multiplexing of a TTP session. This makes possible of
  * TTP's unique feature of allowing applications to send commands to a server
  * while simultaneously receiving data from it. Data packets for writing to
  * and reading from an I/O stream are buffered in a channel, which allows a
- * selector in a {@code Portal} object to pick and ultimately control
+ * selector in a {@code AbstractPortal} object to pick and ultimately control
  * incoming and outgoing traffic.
  *
  * @author  Adriano Raksi
  * @version 1.0-SNAPSHOT
  * @since   2019-06-25
  */
-public class Channel
+public class Channel implements Receivable, Sendable
 {
     /** Channel ID */
     public final int id;
@@ -39,17 +65,17 @@ public class Channel
     }
 
     /** Blocks until all packets in output buffer are sent */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public void awaitOutput()
+    public synchronized void awaitOutput() throws InterruptedException
     {
-        while (output.size() > 0);
+        while (output.size() > 0)
+            wait();
     }
 
     /** Blocks until at least {@code 1} packet in input buffer is available. */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public void awaitInput()
+    public synchronized void awaitInput() throws InterruptedException
     {
-        while (input.size() == 0);
+        while (input.size() == 0)
+            wait();
     }
 
     /**
@@ -87,9 +113,10 @@ public class Channel
      *
      * @param   p   the packet to insert in input buffer.
      */
-    protected void put(Packet p)
+    protected synchronized void put(Packet p)
     {
         input.offer(p);
+        notify();
     }
 
     /**
@@ -97,9 +124,11 @@ public class Channel
      *
      * @return  the packet stored in output buffer.
      */
-    protected Packet get()
+    protected synchronized Packet get()
     {
-        return output.poll();
+        Packet p = output.poll();
+        notify();
+        return p;
     }
 
     /**
