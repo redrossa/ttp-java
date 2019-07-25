@@ -1,4 +1,27 @@
-package com.github.redrossa.ttp;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2019 Adriano Raksi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,18 +32,18 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * This class provides skeletal implementation of the {@code Portal}
+ * This class provides skeletal implementation of the {@code AbstractPortal}
  * interface, to minimise the effort required to implement this
  * interface, as well as the necessary instance resources an implementation
- * of {@code Portal} should all have.
+ * of {@code AbstractPortal} should all have.
  * <p>
- * To implement a blocking singleplexed {@code Portal}, the programmer needs
+ * To implement a blocking singleplexed {@code AbstractPortal}, the programmer needs
  * to extend this class and simply provide implementations for the {@code transfer}
  * methods and the {@code close} method.
  * <p>
- * To implement a non-blocking multiplexed {@code Portal}, please see the
+ * To implement a non-blocking multiplexed {@code AbstractPortal}, please see the
  * {@link MultiplexedPortal} abstract class, a subclass of this class modified
- * especially for providing multiplexing of {@code Portal}.
+ * especially for providing multiplexing of {@code AbstractPortal}.
  *
  * @author  Adriano Raksi
  * @since   2019-07-08
@@ -30,23 +53,26 @@ public abstract class AbstractPortal implements Portal
     /** Closed state of this portal */
     protected volatile boolean closed;
 
-    /** Portal name */
-    private final String name;
+    /** AbstractPortal getName */
+    private String name;
 
     /** The underlying socket of this portal */
-    protected final Socket socket;
+    protected Socket socket;
 
     /** The underlying output stream of the socket of this portal */
-    protected final PacketOutputStream out;
+    protected PacketOutputStream out;
 
     /** The underlying input stream of the socket of this portal */
-    protected final PacketInputStream in;
+    protected PacketInputStream in;
+
+    /** Constructor for use by subclasses */
+    protected AbstractPortal() { }
 
     /**
-     * Creates a new Portal with the specified socket.
+     * Creates a new AbstractPortal with the specified socket.
      *
      * @param   socket  the underlying socket.
-     * @param   name    the name of this portal.
+     * @param   name    the getName of this portal.
      * @throws  IOException if an I/O error occurs when creating the
      *          output stream or if the socket is not connected.
      */
@@ -87,6 +113,11 @@ public abstract class AbstractPortal implements Portal
         return in.readPacket();
     }
 
+    /**
+     * Returns the name of this portal.
+     *
+     * @return the name of this portal.
+     */
     public String getName()
     {
         return name;

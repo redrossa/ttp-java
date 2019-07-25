@@ -1,4 +1,27 @@
-package com.github.redrossa.ttp;
+/*
+ * MIT License
+ *
+ * Copyright (c) 2019 Adriano Raksi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +31,7 @@ import java.net.SocketException;
 
 /**
  * This class provides a nonblocking multiplexed skeletal implementation
- * of the {@code Portal} interface, to minimise the effort required to
+ * of the {@code AbstractPortal} interface, to minimise the effort required to
  * implement this interface, as well as the necessary instance resources
  * an implementation of {@code MultiplexedPortal} should all have.
  * <p>
@@ -20,7 +43,7 @@ import java.net.SocketException;
  * function like a {@link SingleplexedPortal}, although, IO operations
  * called through its channels would not be performed.
  * <p>
- * A {@code Portal} implementation that extends this class must provide
+ * A {@code AbstractPortal} implementation that extends this class must provide
  * implementation for the {@code transfer} methods, such that data will be
  * sent through the channels, unlike {@link SingleplexedPortal}, but still
  * blocking, by awaiting channel input.
@@ -34,7 +57,7 @@ public abstract class MultiplexedPortal extends AbstractPortal
     protected Channel[] channels;
 
     /**
-     * Creates a new Portal with the specified socket.
+     * Creates a new {@code MultiplexedPortal} with the specified socket.
      *
      * @param   socket  the underlying socket.
      * @param   name    name of this portal.
@@ -67,7 +90,7 @@ public abstract class MultiplexedPortal extends AbstractPortal
     /**
      * Returns the number of channels in the underlying channel array.
      *
-     * @return  the number of channels in the array.
+     * @return  the number of 6channels in the array.
      */
     public int getChannelCount()
     {
@@ -85,4 +108,15 @@ public abstract class MultiplexedPortal extends AbstractPortal
 
     @Override
     public abstract Packet transfer(String v);
+
+    @Override
+    public void close() throws Exception
+    {
+        if (closed)
+            return;
+        closed = true;
+        out.close();
+        in.close();
+        socket.close();
+    }
 }
